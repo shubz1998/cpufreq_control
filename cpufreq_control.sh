@@ -19,12 +19,12 @@ check()
 			y)
 				echo "Installing 'CPUPOWER' "
 				echo
-				apt install cpufrequtils	
+				apt install linux-tools-common	
 				;;
 			Y)
 				echo "Installing 'CPUPOWER' "
 				echo
-				apt install cpufrequtils	
+				apt install linux-tools-common	
 				;;
 			n)
 				echo "Exiting the script"
