@@ -12,14 +12,40 @@ check()
 	b="$(sudo cpupower info)"
 	if [ "$?" != "0" ]
 	then
-	echo "cpupower not installed. Install it first as mentioned in readme file"
-	exit
+		echo "Cpupower not installed."
+		echo "Do you want to install 'CPUPOWER' (y/n)"
+		read ans
+		case $ans in
+			y)
+				echo "Installing 'CPUPOWER' "
+				echo
+				apt update && apt dist-upgrade && apt install linux-tools-common linux-tools-generic linux-cloud-tools-generic
+				;;
+			Y)
+				echo "Installing 'CPUPOWER' "
+				echo
+				apt update && apt dist-upgrade && apt install linux-tools-common linux-tools-generic linux-cloud-tools-generic
+				;;
+			n)
+				echo "Exiting the script"
+				exit
+				;;
+			N)
+				echo "Exiting the script"
+				exit
+				;;
+			*)
+				echo "Exiting the script"
+				exit
+				;;
+		esac
 	fi
 	echo
 }
 
 showinfo()
 {
+	echo
 	model="$(sudo cat /proc/cpuinfo | grep -i 'model name'| head -1)"
 	freqrange="$(sudo cpupower frequency-info | grep -i 'hardware limits')"
 	noofcores="$(sudo cat /proc/cpuinfo | grep -i 'cpu cores'| head -1)"
@@ -28,7 +54,7 @@ showinfo()
 	echo $freqrange
 	echo $noofcores
 	echo $logicalprocessor
-
+	wait_r
 }
 
 currentstatus()
@@ -38,6 +64,7 @@ currentstatus()
 
 reset()
 {
+	echo
 	b="$(sudo cpupower frequency-info | grep -i 'hardware limits' )"
 	a="${b}"
 	min=${a:19:3}
@@ -48,26 +75,66 @@ reset()
 	sudo cpupower frequency-set -g powersave
 	echo
 	echo "Everything Set as it was earlier!! :) "
-	echo 
+	echo
+	wait_r
+}
+
+NumCheck(){
+	re='^[0-9]+([.][0-9]+)?$'
+	if ! [[ $1 =~ $re ]] ; then
+		echo
+   		echo "Error: Not a number"
+   		return 1
+	else
+		return 0
+	fi
 }
 
 setfrequency()
 {
+	echo
 	freqrange="$(sudo cpupower frequency-info | grep -i 'hardware limits')"
-	echo "note that " $freqrange
+	echo "Note that " $freqrange
+	echo
 	echo "Enter Minimum frequency(in MHz)(1GHz = 1000MHz) of cpu you want"
 	read min
+	NumCheck $min
+	if [ "$?" -ne "0" ]; then
+		echo "Please enter a valid number."
+		wait_r
+		return
+	fi
 	echo "Enter Maximum frequency(in MHz) of cpu you want(enter same value as of min if u want cpu to operate at particular value)"
 	read max
+	NumCheck $max
+	if [ "$?" -ne "0" ]; then
+		echo "Please enter a valid number."
+		wait_r
+		return
+	fi
+	echo
+	echo "Setting Minimum Frequency"
 	cpupower frequency-set -d "$min"MHz
+	echo
+	echo "Setting Maximum Frequency"
 	cpupower frequency-set -u "$max"MHz
-	echo
-	echo "Frequency Set Succesfully"
-	echo
+
+	if [ "$?" -ne "0" ]; then
+		echo
+		echo "Frequency couldn't be set. Please Try Again."
+		echo
+	else
+		echo
+		echo "Frequency Set Succesfully"
+		echo
+		#statements
+	fi
+	wait_r
 }
 
 changegovernor()
 {
+	echo
 	ans=$(sudo cpupower frequency-info | grep -i 'governors')
 	echo "For Your Processor" $ans
 	echo
@@ -82,15 +149,17 @@ changegovernor()
 	echo "Governor Change successful"
 	echo
 	else
-	echo "COuldn't Change Governor"
+	echo "Couldn't Change Governor"
 	echo
 	fi
+	wait_r
 }
 
 mainf()
 {
 	while : 
 	do
+		clear
 		echo
 		echo "____________CPU FREQ CONTROLLER___________"
 		echo
@@ -120,7 +189,8 @@ mainf()
 			5)
 				reset
 				;;
-			6)	exit
+			6)	clear
+				exit
 				;;
 			*)
 				echo "Wrong Option"
@@ -129,7 +199,12 @@ mainf()
 	done
 }
 
-
+wait_r(){
+	echo
+	echo "Press <Enter> to continue"
+	read junk
+	return 0
+}
 
 
 isRoot
