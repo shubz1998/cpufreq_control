@@ -19,12 +19,12 @@ check()
 			y)
 				echo "Installing 'CPUPOWER' "
 				echo
-				apt install linux-tools-common	
+				apt update && apt dist-upgrade
 				;;
 			Y)
 				echo "Installing 'CPUPOWER' "
 				echo
-				apt install linux-tools-common	
+				apt update && apt dist-upgrade
 				;;
 			n)
 				echo "Exiting the script"
