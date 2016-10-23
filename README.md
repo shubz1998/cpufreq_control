@@ -3,7 +3,7 @@ Change/Control CPU frequency in Linux OS.
 
 #How to Run
 1. install linux-common-tools. sudo apt install linux-tools-common
-2. write sudo cpupower in terminal , it would ask to install one more package specific to your kernel. Install that also.
+2. write sudo cpupower in terminal , it would ask to install one more package specific to your kernel(package name would be like linux-tools-(kernel)-generic). Install that also.
 3. Clone/Download the sh file
 4. Run the following command in terminal sudo bash cpufreq_control.sh
 
