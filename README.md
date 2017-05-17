@@ -12,5 +12,4 @@ Since new intel processors have only two pstates : powersave and performance , B
 Powersave mode doesn't give that good performance while performance mode keep all the cores at their max frequency which 
 raises the temperature of laptop.
 
-Hence using above script file, u can acheive cpu frequencies as you want
-
+Hence using above script file, u can acheive cpu frequencies as you want.
